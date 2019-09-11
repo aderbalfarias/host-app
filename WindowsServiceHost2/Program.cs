@@ -23,20 +23,17 @@ namespace WindowsServiceHost2
                 {
                     configHost.SetBasePath(Directory.GetCurrentDirectory());
                     configHost.AddJsonFile("hostsettings.json", optional: true);
-                    //configHost.AddEnvironmentVariables(prefix: "PREFIX_");
-                    //configHost.AddCommandLine(args);
                 })
                 .ConfigureAppConfiguration((hostContext, configApp) =>
                 {
                     configApp.AddJsonFile("appsettings.json", optional: true);
                     configApp.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
-                    //configApp.AddEnvironmentVariables(prefix: "PREFIX_");
-                    //configApp.AddCommandLine(args);
                 })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<LifetimeEventsHostedService>();
-                })
+                //.ConfigureServices((hostContext, services) =>
+                //{
+                //    services.AddHostedService<LifetimeEventsHostedService>();
+                //    services.AddHostedService<TimedHostedService>();
+                //})
                 .ConfigureLogging((hostContext, configLogging) =>
                 {
                     configLogging.AddConsole();
@@ -47,7 +44,7 @@ namespace WindowsServiceHost2
             if (isService)
             {
                 await builder
-                    .ConfigureServices((hostContext, services) => services.AddSingleton<IHostLifetime, ServiceBaseLifetime>())
+                    .ConfigureServices((hostContext, services) => services.AddSingleton<IHostLifetime, LifetimeEventsServiceBase>())
                     .Build()
                     .RunAsync();
             }
