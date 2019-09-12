@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WindowsServiceHost2
+namespace HostApp.WindowsService
 {
     internal class Program
     {
@@ -23,19 +23,11 @@ namespace WindowsServiceHost2
                 {
                     configHost.SetBasePath(Directory.GetCurrentDirectory());
                     configHost.AddJsonFile("hostsettings.json", optional: true);
-                    //configHost.AddEnvironmentVariables(prefix: "PREFIX_");
-                    //configHost.AddCommandLine(args);
                 })
                 .ConfigureAppConfiguration((hostContext, configApp) =>
                 {
                     configApp.AddJsonFile("appsettings.json", optional: true);
                     configApp.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
-                    //configApp.AddEnvironmentVariables(prefix: "PREFIX_");
-                    //configApp.AddCommandLine(args);
-                })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<LifetimeEventsHostedService>();
                 })
                 .ConfigureLogging((hostContext, configLogging) =>
                 {
@@ -47,7 +39,8 @@ namespace WindowsServiceHost2
             if (isService)
             {
                 await builder
-                    .ConfigureServices((hostContext, services) => services.AddSingleton<IHostLifetime, ServiceBaseLifetime>())
+                    .ConfigureServices((hostContext, services) 
+                        => services.AddSingleton<IHostLifetime, LifetimeEventsServiceBase>())
                     .Build()
                     .RunAsync();
             }

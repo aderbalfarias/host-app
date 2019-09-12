@@ -1,38 +1,31 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WindowsServiceHost2
+namespace HostApp.WindowsService
 {
-    public class ServiceBaseLifetime : ServiceBase, IHostLifetime
+    internal class LifetimeEventsServiceBase : ServiceBase, IHostLifetime
     {
         private readonly ILogger _logger;
+        private readonly IApplicationLifetime _appLifetime;
 
-        private readonly TaskCompletionSource<object> _delayStart = new TaskCompletionSource<object>();
-
-        public ServiceBaseLifetime(IApplicationLifetime applicationLifetime, ILogger<ServiceBaseLifetime> logger)
+        public LifetimeEventsServiceBase(
+            ILogger<LifetimeEventsServiceBase> logger,
+            IApplicationLifetime appLifetime)
         {
-            ApplicationLifetime = applicationLifetime 
-                ?? throw new ArgumentNullException(nameof(applicationLifetime));
             _logger = logger;
+            _appLifetime = appLifetime;
         }
 
-        private IApplicationLifetime ApplicationLifetime { get; }
-
-        public Task WaitForStartAsync(CancellationToken cancellationToken = default)
+        public Task WaitForStartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("WaitForStartAsync");
+            new Thread(Run).Start();
 
-            cancellationToken.Register(() => _delayStart.TrySetCanceled());
-            ApplicationLifetime.ApplicationStopping.Register(Stop);
-
-            new Thread(Run).Start(); // Otherwise this would block and prevent IHost.StartAsync from finishing.
-            return _delayStart.Task;
+            return Task.CompletedTask;
         }
 
         private void Run()
@@ -42,17 +35,17 @@ namespace WindowsServiceHost2
                 _logger.LogInformation("Run");
 
                 Run(this); // This blocks until the service is stopped.
-                _delayStart.TrySetException(new InvalidOperationException("Stopped without starting"));
             }
             catch (Exception ex)
             {
-                _delayStart.TrySetException(ex);
+                _logger.LogError($"Error: {ex}");
             }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Stop();
+            _logger.LogInformation("sto");
             return Task.CompletedTask;
         }
 
@@ -61,7 +54,25 @@ namespace WindowsServiceHost2
         {
             _logger.LogInformation("OnStart");
 
-            _delayStart.TrySetResult(null);
+            _logger.LogInformation("OnStarted has been called 1.");
+
+            string Path = @"C:\Logs\TestApplication.txt";
+            if (!File.Exists(Path))
+            {
+                using (var sw = File.CreateText(Path))
+                {
+                    sw.WriteLine(DateTime.UtcNow.ToString("O"));
+                }
+            }
+            else
+            {
+                using (var sw = File.AppendText(Path))
+                {
+                    sw.WriteLine(DateTime.UtcNow.ToString("O"));
+                }
+            }
+            // Perform post-startup activities here
+
             base.OnStart(args);
 
             _logger.LogInformation("OnStartFinish");
@@ -73,7 +84,7 @@ namespace WindowsServiceHost2
         protected override void OnStop()
         {
             _logger.LogInformation("Stop");
-            ApplicationLifetime.StopApplication();
+            _appLifetime.StopApplication();
             base.OnStop();
         }
     }
