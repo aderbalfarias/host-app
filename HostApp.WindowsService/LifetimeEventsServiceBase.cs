@@ -6,7 +6,7 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WindowsServiceHost2
+namespace HostApp.WindowsService
 {
     internal class LifetimeEventsServiceBase : ServiceBase, IHostLifetime
     {
@@ -14,7 +14,7 @@ namespace WindowsServiceHost2
         private readonly IApplicationLifetime _appLifetime;
 
         public LifetimeEventsServiceBase(
-            ILogger<LifetimeEventsHostedService> logger,
+            ILogger<LifetimeEventsServiceBase> logger,
             IApplicationLifetime appLifetime)
         {
             _logger = logger;
@@ -54,31 +54,6 @@ namespace WindowsServiceHost2
         {
             _logger.LogInformation("OnStart");
 
-            base.OnStart(args);
-
-            _logger.LogInformation("OnStartFinish");
-
-        }
-
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("StartAsync");
-
-            _appLifetime.ApplicationStarted.Register(OnStarted);
-            _appLifetime.ApplicationStopping.Register(OnStopping);
-            _appLifetime.ApplicationStopped.Register(OnStopped);
-
-            return Task.CompletedTask;
-        }
-
-        //public Task StopAsync(CancellationToken cancellationToken)
-        //{
-        //    return Task.CompletedTask;
-        //}
-
-        private void OnStarted()
-        {
             _logger.LogInformation("OnStarted has been called 1.");
 
             string Path = @"C:\Logs\TestApplication.txt";
@@ -97,6 +72,11 @@ namespace WindowsServiceHost2
                 }
             }
             // Perform post-startup activities here
+
+            base.OnStart(args);
+
+            _logger.LogInformation("OnStartFinish");
+
         }
 
         // Called by base.Stop. This may be called multiple times by service Stop, ApplicationStopping, and StopAsync.
@@ -106,20 +86,6 @@ namespace WindowsServiceHost2
             _logger.LogInformation("Stop");
             _appLifetime.StopApplication();
             base.OnStop();
-        }
-
-        private void OnStopping()
-        {
-            _logger.LogInformation("OnStopping has been called 1.");
-
-            // Perform on-stopping activities here
-        }
-
-        private void OnStopped()
-        {
-            _logger.LogInformation("OnStopped has been called 1.");
-
-            // Perform post-stopped activities here
         }
     }
 }
