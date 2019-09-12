@@ -32,30 +32,52 @@ namespace HostApp.WindowsService
         {
             try
             {
-                _logger.LogInformation("Run");
+                _logger.LogInformation("Windows service running");
 
                 Run(this); // This blocks until the service is stopped.
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error: {ex}");
+                _logger.LogError($"Exception at Run method, Error: {ex}");
             }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Stop();
-            _logger.LogInformation("sto");
+
             return Task.CompletedTask;
         }
 
-        // Called by base.Run when the service is ready to start.
+        /// <summary>
+        ///     Called by base.Run when the service is ready to start.
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
-            _logger.LogInformation("OnStart");
+            _logger.LogInformation("Windows service started");
 
-            _logger.LogInformation("OnStarted has been called 1.");
+            // Perform post-startup activities here
+            CreateFileDemo();
 
+            base.OnStart(args);
+        }
+
+        /// <summary>
+        ///     Called by base.Stop This may be called multiple times by service Stop
+        ///     StopApplication uses a CancellationTokenSource and prevents any recursion.
+        /// </summary>
+        protected override void OnStop()
+        {
+            _logger.LogInformation("Windows service stopped");
+
+            _appLifetime.StopApplication();
+
+            base.OnStop();
+        }
+
+        private void CreateFileDemo()
+        {
             string Path = @"C:\Logs\TestApplication.txt";
             if (!File.Exists(Path))
             {
@@ -71,21 +93,6 @@ namespace HostApp.WindowsService
                     sw.WriteLine(DateTime.UtcNow.ToString("O"));
                 }
             }
-            // Perform post-startup activities here
-
-            base.OnStart(args);
-
-            _logger.LogInformation("OnStartFinish");
-
-        }
-
-        // Called by base.Stop. This may be called multiple times by service Stop, ApplicationStopping, and StopAsync.
-        // That's OK because StopApplication uses a CancellationTokenSource and prevents any recursion.
-        protected override void OnStop()
-        {
-            _logger.LogInformation("Stop");
-            _appLifetime.StopApplication();
-            base.OnStop();
         }
     }
 }
