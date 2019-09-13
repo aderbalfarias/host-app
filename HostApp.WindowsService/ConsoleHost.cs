@@ -1,12 +1,20 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace HostApp.WindowsService
+{
     public class ConsoleHost : IHostedService
     {
         private readonly ILogger _logger;
-        private readonly IHandleResponseService _handleResponseService;
+        private readonly IHandleService _handleService;
 
-        public ConsoleHost(ILogger<ConsoleHost> logger, IHandleResponseService handleResponseService)
+        public ConsoleHost(ILogger<ConsoleHost> logger, IHandleService handleService)
         {
             _logger = logger;
-            _handleResponseService = handleResponseService;
+            _handleService = handleService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -15,7 +23,7 @@
 
             try
             {
-                _handleResponseService.ReceiveData();
+                _handleService.ReceiveData();
             }
             catch (Exception e)
             {
@@ -32,3 +40,4 @@
             return Task.CompletedTask;
         }
     }
+}
