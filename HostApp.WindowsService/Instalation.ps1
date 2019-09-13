@@ -1,7 +1,15 @@
-$acl = Get-Acl "{EXE PATH}"
-$aclRuleArgs = "{DOMAIN OR COMPUTER NAME\USER}", "Read,Write,ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow"
+#NOTE: Make sure to run as Administrator
+
+param
+(
+    [Parameter(Mandatory=$True)] [ValidateNotNull()] [string]$exePath,
+    [Parameter(Mandatory=$True)] [ValidateNotNull()] [string]$domainAndUser
+)
+
+$acl = Get-Acl $exePath
+$aclRuleArgs = $domainAndUser, "Read,Write,ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow"
 $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($aclRuleArgs)
 $acl.SetAccessRule($accessRule)
-$acl | Set-Acl "{EXE PATH}"
+$acl | Set-Acl $exePath
 
-New-Service -Name HostAsWindowsService -BinaryPathName {EXE FILE PATH} -Credential {DOMAIN OR COMPUTER NAME\USER} -Description "Hosting App .NET Core as a windows service" -DisplayName "Host App Test on Windows" -StartupType Automatic
+New-Service -Name HostAsWindowsService -BinaryPathName $exePath\MyProject.exe -Credential $domainAndUser -Description "Hosting App .NET Core as a windows service" -DisplayName "Host App Test on Windows" -StartupType Automatic
