@@ -38,6 +38,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\HostApp.Domain\HostApp.Domain.csproj" />
+    <ProjectReference Include="..\HostApp.IoC\HostApp.IoC.csproj" />
   </ItemGroup>
 
 </Project>

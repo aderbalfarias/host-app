@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreApp.Data\CoreApp.Data.csproj" />
-    <ProjectReference Include="..\CoreApp.Domain\CoreApp.Domain.csproj" />
+    <ProjectReference Include="..\HostApp.Data\HostApp.Data.csproj" />
+    <ProjectReference Include="..\HostApp.Domain\HostApp.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

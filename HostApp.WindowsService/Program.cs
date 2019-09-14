@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HostApp.IoC;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,7 @@ namespace HostApp.WindowsService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.Classes(hostContext.Configuration.GetSection("AppSettings"));
-                    services.Databases(hostContext.Configuration.GetConnectionString("Connection"));
+                    services.Databases(hostContext.Configuration.GetConnectionString("PrimaryConnection"));
                     services.Services();
                     services.Repositories();
                 })
