@@ -1,4 +1,4 @@
-﻿namespace CoreApp.Domain.Entities
+﻿namespace HostApp.Domain.Entities
 {
     public class TestEntity
     {

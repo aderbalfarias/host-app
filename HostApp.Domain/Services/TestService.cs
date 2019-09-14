@@ -1,12 +1,12 @@
-﻿using CoreApp.Domain.Entities;
-using CoreApp.Domain.Interfaces.Repositories;
-using CoreApp.Domain.Interfaces.Services;
+﻿using HostApp.Domain.Entities;
+using HostApp.Domain.Interfaces.Repositories;
+using HostApp.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreApp.Domain.Services
+namespace HostApp.Domain.Services
 {
     public class TestService : ITestService
     {

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostApp.WindowsService", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostApp.Data", "HostApp.Data\HostApp.Data.csproj", "{A2F59A35-5A53-4404-8859-20A7AC2D206D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostApp.Domain", "HostApp.Domain\HostApp.Domain.csproj", "{E3842EC3-6FCE-4E75-BFA4-43614C139E9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A2F59A35-5A53-4404-8859-20A7AC2D206D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F59A35-5A53-4404-8859-20A7AC2D206D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F59A35-5A53-4404-8859-20A7AC2D206D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3842EC3-6FCE-4E75-BFA4-43614C139E9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3842EC3-6FCE-4E75-BFA4-43614C139E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3842EC3-6FCE-4E75-BFA4-43614C139E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3842EC3-6FCE-4E75-BFA4-43614C139E9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,3 +1,4 @@
+using HostApp.Domain.Interfaces.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,12 +10,12 @@ namespace HostApp.WindowsService
     public class ConsoleHost : IHostedService
     {
         private readonly ILogger _logger;
-        private readonly IHandleService _handleService;
+        private readonly ITestService _testService;
 
-        public ConsoleHost(ILogger<ConsoleHost> logger, IHandleService handleService)
+        public ConsoleHost(ILogger<ConsoleHost> logger, ITestService testService)
         {
             _logger = logger;
-            _handleService = handleService;
+            _testService = testService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -23,7 +24,7 @@ namespace HostApp.WindowsService
 
             try
             {
-                _handleService.ReceiveData();
+                _testService.GetAll();
             }
             catch (Exception e)
             {

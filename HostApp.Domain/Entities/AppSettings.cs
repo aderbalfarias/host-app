@@ -1,7 +1,7 @@
-﻿namespace CoreApp.Domain.Entities
+﻿namespace HostApp.Domain.Entities
 {
     public class AppSettings
     {
-        public string ResponseErrorMessage { get; set; }
+        public string Key1 { get; set; }
     }
 }

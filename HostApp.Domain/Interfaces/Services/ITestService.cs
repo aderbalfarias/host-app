@@ -1,8 +1,8 @@
-﻿using CoreApp.Domain.Entities;
+﻿using HostApp.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoreApp.Domain.Interfaces.Services
+namespace HostApp.Domain.Interfaces.Services
 {
     public interface ITestService
     {
