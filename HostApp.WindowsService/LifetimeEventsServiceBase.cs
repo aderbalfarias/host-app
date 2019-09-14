@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using HostApp.Domain.Interfaces.Services;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,13 +12,16 @@ namespace HostApp.WindowsService
     {
         private readonly ILogger _logger;
         private readonly IApplicationLifetime _appLifetime;
+        private readonly ITestService _testSercice;
 
         public LifetimeEventsServiceBase(
             ILogger<LifetimeEventsServiceBase> logger,
-            IApplicationLifetime appLifetime)
+            IApplicationLifetime appLifetime,
+            ITestService testService)
         {
             _logger = logger;
             _appLifetime = appLifetime;
+            _testSercice = testService;
         }
 
         public Task WaitForStartAsync(CancellationToken cancellationToken)
@@ -58,7 +61,7 @@ namespace HostApp.WindowsService
             _logger.LogInformation("Windows service started");
 
             // Perform post-startup activities here
-            CreateFileDemo();
+            _testSercice.GetAll();
 
             base.OnStart(args);
         }
@@ -74,25 +77,6 @@ namespace HostApp.WindowsService
             _appLifetime.StopApplication();
 
             base.OnStop();
-        }
-
-        private void CreateFileDemo()
-        {
-            string Path = @"C:\Logs\TestApplication.txt";
-            if (!File.Exists(Path))
-            {
-                using (var sw = File.CreateText(Path))
-                {
-                    sw.WriteLine(DateTime.UtcNow.ToString("O"));
-                }
-            }
-            else
-            {
-                using (var sw = File.AppendText(Path))
-                {
-                    sw.WriteLine(DateTime.UtcNow.ToString("O"));
-                }
-            }
         }
     }
 }

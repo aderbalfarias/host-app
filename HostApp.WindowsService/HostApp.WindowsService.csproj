@@ -35,5 +35,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\HostApp.Domain\HostApp.Domain.csproj" />
+    <ProjectReference Include="..\HostApp.IoC\HostApp.IoC.csproj" />
+  </ItemGroup>
 
 </Project>

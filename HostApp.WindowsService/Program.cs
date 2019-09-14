@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HostApp.IoC;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,13 @@ namespace HostApp.WindowsService
                     configApp.AddJsonFile("appsettings.json", optional: true);
                     configApp.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
                 })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.Classes(hostContext.Configuration.GetSection("AppSettings"));
+                    services.Databases(hostContext.Configuration.GetConnectionString("PrimaryConnection"));
+                    services.Services();
+                    services.Repositories();
+                })
                 .ConfigureLogging((hostContext, configLogging) =>
                 {
                     configLogging.AddConsole();
@@ -46,6 +54,9 @@ namespace HostApp.WindowsService
             }
             else
             {
+                builder.ConfigureServices((hostContext, services)
+                        => services.AddHostedService<ConsoleHost>());
+                
                 await builder.RunConsoleAsync();
             }
         }
